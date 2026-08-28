@@ -1,0 +1,101 @@
+@import 'tailwindcss';
+
+/* ---------------------------------------------------------------------------
+   Design tokens — sampled from reference/cey-mockup-full.jpg.
+   Do not substitute. "Black" is warm charcoal #5C5151, never #000.
+   Spec: reference/cey-build-reference.md §2
+   ------------------------------------------------------------------------- */
+@theme {
+  --color-pink-topbar: #f9e8ea;
+  --color-pink-sidebar: #f6e8eb;
+  --color-pink-marquee: #fbecef;
+  --color-paper-hero: #fffdfe;
+  --color-paper-grid: #fcfaf9;
+  --color-paper-footer: #f0e9ea;
+  --color-ink: #5c5151;
+  --color-ink-soft: #8d8b8b;
+  --color-ink-pencil: #bfb0b3;
+  --color-grid-line: #f3cbd8;
+
+  /* Type system — spec §3 */
+  --font-script: 'Ms Madi', cursive;
+  --font-nav: 'Gochi Hand', cursive;
+  --font-pen: 'Annie Use Your Telescope', cursive;
+  --font-body: 'Zen Maru Gothic', ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--color-paper-footer);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Keyboard focus: dashed charcoal outline — fits the hand-drawn aesthetic.
+     Spec §9. */
+  :focus-visible {
+    outline: 2px dashed var(--color-ink);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  img {
+    max-width: 100%;
+    display: block;
+  }
+}
+
+@layer components {
+  /* Pink graph paper — 24px cell. Spec §4.4 / §4.5 */
+  .graph-paper {
+    background-image:
+      repeating-linear-gradient(
+        to right,
+        var(--color-grid-line) 0 1px,
+        transparent 1px 24px
+      ),
+      repeating-linear-gradient(
+        to bottom,
+        var(--color-grid-line) 0 1px,
+        transparent 1px 24px
+      );
+  }
+}
+
+/* Marquee drift — spec §4.3. Duplicated track, so -50% is one seamless loop. */
+@keyframes cey-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.cey-marquee-track {
+  animation: cey-marquee 38s linear infinite;
+  will-change: transform;
+}
+
+/* Motion is gentle and sparse, and always optional — spec §6 */
+@media (prefers-reduced-motion: reduce) {
+  .cey-marquee-track {
+    animation: none;
+    transform: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>c.ey — typography system</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Ms+Madi&family=Gochi+Hand&family=Annie+Use+Your+Telescope&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     c.ey type + color tokens — copy this block into the real site
+     ============================================================ */
+  :root{
+    /* faces */
+    --font-script:'Ms Madi', cursive;              /* signature / flourish accents */
+    --font-hand:'Gochi Hand', cursive;             /* nav, headings, UI labels     */
+    --font-price:'Annie Use Your Telescope', cursive; /* prices, marquee, notes    */
+    --font-body:'Zen Maru Gothic', sans-serif;     /* paragraphs, forms, checkout  */
+
+    /* scale */
+    --size-display: clamp(56px, 10vw, 96px);
+    --size-h2: 22px;
+    --size-nav: 15px;
+    --size-price: 21px;
+    --size-body: 15px;
+    --size-caption: 12.5px;
+
+    /* the signature move: airy lowercase tracking */
+    --track-nav: .38em;
+    --track-label: .22em;
+
+    /* palette pulled from the mockup */
+    --paper:#FBF0F3;      /* blush page background   */
+    --panel:#F7DCE5;      /* deeper pink panels      */
+    --card:#FFFFFF;       /* product cards           */
+    --ink:#4A3A41;        /* soft marker "black"     */
+    --ink-light:#8A7078;  /* secondary text          */
+    --rose:#E79FB8;       /* accent                  */
+    --rose-deep:#C9738F;  /* hover / emphasis        */
+    --grid:#F3CBD8;       /* graph-paper lines       */
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    font-family:var(--font-body);
+    font-size:var(--size-body);
+    line-height:1.7;
+    color:var(--ink);
+    background:var(--paper);
+  }
+  a{ color:inherit; }
+  a:focus-visible, button:focus-visible{
+    outline:2px dashed var(--rose-deep);
+    outline-offset:4px;
+    border-radius:4px;
+  }
+
+  /* ---------- shared type roles ---------- */
+  .t-script{ font-family:var(--font-script); font-weight:400; }
+  .t-hand{ font-family:var(--font-hand); text-transform:lowercase; }
+  .t-price{ font-family:var(--font-price); }
+  .t-label{
+    font-family:var(--font-hand);
+    text-transform:lowercase;
+    letter-spacing:var(--track-nav);
+    font-size:var(--size-nav);
+  }
+
+  /* ============================================================
+     1 · live demo — the system in context
+     ============================================================ */
+
+  /* top bar */
+  .demo-nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 24px;
+    background:var(--paper);
+    border-bottom:1.5px solid var(--grid);
+  }
+  .demo-nav .logo{ font-family:var(--font-script); font-size:30px; line-height:1; }
+  .demo-nav .logo span{ color:var(--rose-deep); }
+  .demo-nav ul{ display:flex; gap:26px; list-style:none; }
+  .demo-nav a{ text-decoration:none; }
+  .demo-nav a:hover{ color:var(--rose-deep); }
+
+  /* hero */
+  .demo-hero{
+    text-align:center;
+    padding:64px 24px 48px;
+    background:
+      radial-gradient(ellipse 60% 70% at 50% 30%, #FDF7F9 0%, var(--paper) 70%);
+  }
+  .demo-hero .eyebrow{
+    display:inline-block;
+    letter-spacing:var(--track-nav);
+    font-size:14px;
+    color:var(--ink-light);
+    margin-bottom:6px;
+  }
+  .demo-hero h1{
+    font-family:var(--font-script);
+    font-size:var(--size-display);
+    font-weight:400;
+    line-height:1;
+    color:var(--ink);
+  }
+  .demo-hero h1 .heart{ color:var(--rose); }
+  .demo-hero .byline{
+    font-family:var(--font-price);
+    font-size:16px;
+    color:var(--ink-light);
+    margin-top:10px;
+  }
+
+  /* marquee */
+  .marquee{
+    overflow:hidden;
+    background:var(--panel);
+    border-top:1.5px solid var(--grid);
+    border-bottom:1.5px solid var(--grid);
+    padding:10px 0;
+    white-space:nowrap;
+  }
+  .marquee-track{
+    display:inline-block;
+    font-family:var(--font-price);
+    font-size:17px;
+    letter-spacing:var(--track-label);
+    animation:scroll-x 22s linear infinite;
+  }
+  .marquee-track span{ margin:0 18px; }
+  @keyframes scroll-x{
+    from{ transform:translateX(0); }
+    to{ transform:translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .marquee-track{ animation:none; }
+  }
+
+  /* product cards */
+  .demo-shop{
+    display:flex; gap:22px; flex-wrap:wrap; justify-content:center;
+    padding:44px 24px;
+  }
+  .card{
+    width:200px; text-align:center;
+  }
+  .card .thumb{
+    height:170px;
+    background:var(--card);
+    border:1.5px solid var(--grid);
+    border-radius:18px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-script);
+    font-size:34px;
+    color:var(--rose);
+    box-shadow:0 4px 0 var(--grid);
+    transition:transform .15s ease;
+  }
+  .card:hover .thumb{ transform:translateY(-3px) rotate(-1deg); }
+  .card .name{
+    font-family:var(--font-hand);
+    text-transform:lowercase;
+    letter-spacing:var(--track-label);
+    font-size:15px;
+    margin-top:12px;
+  }
+  .card .price{
+    font-family:var(--font-price);
+    font-size:var(--size-price);
+    color:var(--rose-deep);
+  }
+  .card button{
+    margin-top:8px;
+    font-family:var(--font-hand);
+    text-transform:lowercase;
+    letter-spacing:var(--track-label);
+    font-size:13.5px;
+    color:var(--ink);
+    background:var(--panel);
+    border:1.5px solid var(--grid);
+    border-radius:999px;
+    padding:7px 18px;
+    cursor:pointer;
+    transition:background .15s ease;
+  }
+  .card button:hover{ background:var(--rose); color:#fff; border-color:var(--rose); }
+
+  /* ============================================================
+     2 · the spec — what each face does
+     ============================================================ */
+  .spec{
+    max-width:860px;
+    margin:0 auto;
+    padding:56px 24px 80px;
+  }
+  .spec-title{
+    font-family:var(--font-hand);
+    text-transform:lowercase;
+    letter-spacing:var(--track-nav);
+    font-size:var(--size-h2);
+    text-align:center;
+    margin-bottom:40px;
+  }
+  .face{
+    background:var(--card);
+    border:1.5px solid var(--grid);
+    border-radius:20px;
+    padding:26px 28px;
+    margin-bottom:22px;
+    box-shadow:0 4px 0 var(--grid);
+  }
+  .face .sample{ line-height:1.25; margin-bottom:14px; word-break:break-word; }
+  .face .meta{
+    font-size:var(--size-caption);
+    letter-spacing:.05em;
+    color:var(--ink-light);
+    line-height:1.9;
+  }
+  .face .meta b{ color:var(--ink); font-weight:700; }
+  .face .role{
+    display:inline-block;
+    font-family:var(--font-hand);
+    text-transform:lowercase;
+    letter-spacing:var(--track-label);
+    font-size:13px;
+    background:var(--panel);
+    border-radius:999px;
+    padding:4px 14px;
+    margin-bottom:14px;
+  }
+
+  .s-script{ font-family:var(--font-script); font-size:56px; }
+  .s-hand{ font-family:var(--font-hand); font-size:26px; text-transform:lowercase; letter-spacing:var(--track-label); }
+  .s-price{ font-family:var(--font-price); font-size:28px; }
+  .s-body{ font-size:15px; }
+
+  /* rules list */
+  .rules{
+    background:var(--panel);
+    border-radius:20px;
+    padding:26px 30px;
+    margin-top:34px;
+  }
+  .rules h3{
+    font-family:var(--font-hand);
+    text-transform:lowercase;
+    letter-spacing:var(--track-label);
+    font-size:17px;
+    font-weight:400;
+    margin-bottom:12px;
+  }
+  .rules ol{ padding-left:20px; }
+  .rules li{ margin-bottom:8px; }
+
+  /* code block */
+  .code{
+    margin-top:34px;
+    background:#3E3238;
+    color:#F7DCE5;
+    border-radius:16px;
+    padding:22px 24px;
+    font-family:ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size:12.5px;
+    line-height:1.8;
+    overflow-x:auto;
+  }
+  .code .c{ color:#B9909F; }
+
+  /* footer */
+  .demo-footer{
+    padding:26px 24px;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 23px, var(--grid) 23px 24px),
+      repeating-linear-gradient(90deg, transparent 0 23px, var(--grid) 23px 24px),
+      var(--panel);
+    font-family:var(--font-price);
+    font-size:16px;
+    color:var(--ink-light);
+  }
+
+  @media (max-width:560px){
+    .demo-nav ul{ gap:14px; }
+    .demo-nav .t-label{ letter-spacing:.22em; font-size:13px; }
+    .s-script{ font-size:42px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════ live demo ══════════ -->
+
+<nav class="demo-nav" aria-label="demo shop navigation">
+  <div class="logo">c.ey<span>&hearts;</span></div>
+  <ul>
+    <li><a class="t-label" href="#spec">catalogue</a></li>
+    <li><a class="t-label" href="#spec">about</a></li>
+    <li><a class="t-label" href="#spec">contact</a></li>
+  </ul>
+</nav>
+
+<header class="demo-hero">
+  <span class="eyebrow t-hand">artist shop</span>
+  <h1>c.ey<span class="heart">&hearts;</span></h1>
+  <p class="byline">by @c.ey&mdash;&mdash;&mdash;</p>
+</header>
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span>&rarr;</span><span>new stickers in the shop</span>
+    <span>&rarr;</span><span>free shipping over $25</span>
+    <span>&rarr;</span><span>thank you for supporting small artists</span>
+    <span>&rarr;</span><span>new stickers in the shop</span>
+    <span>&rarr;</span><span>free shipping over $25</span>
+    <span>&rarr;</span><span>thank you for supporting small artists</span>
+  </div>
+</div>
+
+<section class="demo-shop" aria-label="demo product cards">
+  <div class="card">
+    <div class="thumb">&hearts;</div>
+    <div class="name">nana glitter sticker</div>
+    <div class="price">$5.00</div>
+    <button type="button">add to cart</button>
+  </div>
+  <div class="card">
+    <div class="thumb">&hearts;</div>
+    <div class="name">matte sticker pair</div>
+    <div class="price">$5.00</div>
+    <button type="button">add to cart</button>
+  </div>
+  <div class="card">
+    <div class="thumb">&hearts;</div>
+    <div class="name">mini print</div>
+    <div class="price">$8.00</div>
+    <button type="button">add to cart</button>
+  </div>
+</section>
+
+<!-- ══════════ the spec ══════════ -->
+
+<main class="spec" id="spec">
+  <h2 class="spec-title">the type system</h2>
+
+  <div class="face">
+    <span class="role">1 &middot; signature</span>
+    <div class="sample s-script">c.ey artist shop</div>
+    <p class="meta">
+      <b>Ms Madi</b> &middot; 400 &middot; display only, 42&ndash;96px<br>
+      Stands in for the hand-drawn marker logo. Use for the shop name, hero
+      headline, and flourish words (&ldquo;thank you&rdquo;, &ldquo;new!&rdquo;).
+      For the real site, export the actual drawn signature as an SVG and keep
+      this face as its text fallback &mdash; a font can echo a signature, but the
+      original scrawl <em>is</em> the brand.
+    </p>
+  </div>
+
+  <div class="face">
+    <span class="role">2 &middot; handwriting ui</span>
+    <div class="sample s-hand">c a t a l o g u e &nbsp; &middot; &nbsp; a b o u t &nbsp; &middot; &nbsp; e v e n t s</div>
+    <p class="meta">
+      <b>Gochi Hand</b> &middot; 400 &middot; nav, headings, buttons, labels &middot; 13&ndash;26px<br>
+      Always lowercase. Nav links get the wide <b>.38em</b> tracking (the
+      mockup&rsquo;s signature move); buttons and product names get the tighter
+      <b>.22em</b>. Never use below 13px &mdash; handwriting collapses when small.
+    </p>
+  </div>
+
+  <div class="face">
+    <span class="role">3 &middot; pen notes</span>
+    <div class="sample s-price">$5.00 sticker &nbsp; &rarr; scroll &rarr;</div>
+    <p class="meta">
+      <b>Annie Use Your Telescope</b> &middot; 400 &middot; prices, marquee strips, footer asides &middot; 15&ndash;28px<br>
+      The tall, skinny pen-writing from the mockup&rsquo;s price tags. Keeping
+      prices in a <em>different</em> hand than the labels is what makes the page
+      feel genuinely handwritten instead of &ldquo;handwriting font applied
+      everywhere&rdquo;.
+    </p>
+  </div>
+
+  <div class="face">
+    <span class="role">4 &middot; workhorse</span>
+    <div class="sample s-body">Each sticker is printed on weatherproof glitter vinyl, roughly 6&thinsp;cm tall, and ships in a rigid mailer within 3&ndash;5 business days. Orders over $25 ship free within Canada.</div>
+    <p class="meta">
+      <b>Zen Maru Gothic</b> &middot; 400 / 500 / 700 &middot; paragraphs, product descriptions, forms, cart, checkout, policies &middot; 12.5&ndash;16px<br>
+      A rounded Japanese &ldquo;maru gothic&rdquo; &mdash; the typeface family of
+      cute stationery packaging &mdash; so body text stays on-aesthetic while
+      being fully readable. All ecommerce-critical text (prices in the cart,
+      totals, shipping forms, error messages) lives here, never in handwriting.
+      Bonus: it covers Japanese glyphs if product names ever need them.
+    </p>
+  </div>
+
+  <div class="rules">
+    <h3>house rules</h3>
+    <ol>
+      <li><b>Lowercase is law</b> for Gochi Hand — the moment something is capitalized, it stops looking like the mockup.</li>
+      <li><b>Tracking = hierarchy.</b> Wide (.38em) means navigation, tight (.22em) means labels, none means notes. Don't invent in-between values.</li>
+      <li><b>One hand per job.</b> Script for identity, Gochi for UI, Annie for prices/notes. If two handwriting faces appear in the same line, something's wrong.</li>
+      <li><b>Handwriting is decoration, Zen Maru is function.</b> Anything a customer must read to complete a purchase (checkout, totals, addresses, errors) uses the workhorse.</li>
+      <li><b>Minimum sizes:</b> Gochi 13px, Annie 15px, Zen Maru 12.5px. Below that, switch to Zen Maru.</li>
+    </ol>
+  </div>
+
+  <div class="code" aria-label="copyable font tokens">
+<span class="c">/* &lt;head&gt; */</span>
+&lt;link href="https://fonts.googleapis.com/css2?family=Ms+Madi&amp;family=Gochi+Hand&amp;family=Annie+Use+Your+Telescope&amp;family=Zen+Maru+Gothic:wght@400;500;700&amp;display=swap" rel="stylesheet"&gt;
+
+<span class="c">/* tokens */</span>
+:root{
+  --font-script:'Ms Madi', cursive;
+  --font-hand:'Gochi Hand', cursive;
+  --font-price:'Annie Use Your Telescope', cursive;
+  --font-body:'Zen Maru Gothic', sans-serif;
+  --track-nav:.38em;  --track-label:.22em;
+  --paper:#FBF0F3; --panel:#F7DCE5; --card:#FFFFFF;
+  --ink:#4A3A41; --ink-light:#8A7078;
+  --rose:#E79FB8; --rose-deep:#C9738F; --grid:#F3CBD8;
+}
+  </div>
+</main>
+
+<footer class="demo-footer">i dunno what im doing &hearts;</footer>
+
+</body>
+</html>
